@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: #f4f6f8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .container {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                text-align: center;
+                width: 400px;
+            }
+            input {
+                width: 90%;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            button {
+                padding: 10px 20px;
+                background: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+            #result {
+                margin-top: 15px;
+                word-break: break-all;
+            }
+            a {
+                color: green;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>🔗 URL Shortener</h2>
+            <input type="text" id="longUrl" placeholder="Enter long URL here..." />
+            <br>
+            <button onclick="shortenUrl()">Shorten</button>
+
+            <div id="result"></div>
+        </div>
+
+        <script>
+        async function shortenUrl() {
+            const url = document.getElementById("longUrl").value;
+
+            const response = await fetch('/shorten', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await response.json();
+
+            const resultDiv = document.getElementById("result");
+
+            if (data.short_url) {
+                resultDiv.innerHTML = `
+                    <p>Short URL:</p>
+                    <a href="${data.short_url}" target="_blank">${data.short_url}</a>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p style="color:red;">Error: ${data.error}</p>`;
+            }
+        }
+        </script>
+
+        
+    </body>
+</html>
